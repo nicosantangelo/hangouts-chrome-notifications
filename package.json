@@ -1,0 +1,11 @@
+{
+  "name": "Hangouts Notifications",
+  "version": "1.0.0",
+  "description": "Add Chrome notifications to hangouts",
+  "main": "content.js",
+  "author": "Nicolás Santángelo",
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
