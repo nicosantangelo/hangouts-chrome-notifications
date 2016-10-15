@@ -2,12 +2,13 @@
   'use strict'
 
   var SELECTORS = {
-    roster: '.kgwWAf',
-    unread: '.c-P.yd .Bb.ee',
+    conversations: '.kgwWAf',
+    conversation : '.c-P.yd',
+    unread       : '.Bb.ee',
 
     avatar: 'img.Yf',
     name  : 'div.lt.mG',
-    text  : 'ng sQR2Rb'
+    text  : '.ng.sQR2Rb'
   }
 
   function Finder(selector) {
@@ -35,33 +36,35 @@
 
   // ==
 
-  function Roster() {
-    this.roaster = null
+  function Conversation() {
+    this.conversations = null
   }
-  Roster.prototype = {
-    findRoaster: function(onFind) {
-      onFind = onFind || function() {}
-
-      if (this.roaster) {
-        return onFind.call(this)
+  Conversation.prototype = {
+    start: function(onFind) {
+      if (this.conversations) {
+        return onFind(this)
       }
 
-      new Finder(SELECTORS.roster).find(function(roster) {
-        this.roaster = roaster
-        onFind.call(this)
+      new Finder(SELECTORS.conversations).find(function(conversations) {
+        this.conversations = conversations
+        onFind(this)
       }.bind(this))
     },
-    onUnreadChat: function(callback) {
-      this.findRoaster(function() {
-        var unreadChats = roster.querySelectorAll(SELECTORS.unread)
-        console.log('Found', unreadChats.length, 'unread chats')
+    findUnread: function() {
+      var unreadConversations = this.conversations.querySelectorAll(SELECTORS.unread)
+      console.log('Found', unreadConversations.length, 'unread conversations')
+      return unreadConversations
+    },
+    onUnread: function(callback) {
+      if(! this.conversations) throw new Error('You need to start the Conversations object first')
 
-        if (unreadChats.length) {
-          callback(unreadChats)
-        }
+      var unreadConversations = this.findUnread()
 
-        setTimeout(function() { findUnread() }, 1000)
-      })
+      if (unreadConversations.length) {
+        callback(unreadConversations)
+      }
+
+      // setTimeout(onUnread, 1000)
     }
   }
 
@@ -123,13 +126,13 @@
   // ----------------------------------------------------------
   // Main
 
-  new Roaster().onUnreadChat(function(unread) {
-    console.log({ unread })
-    var firstUnread = unread[0]
+  new Conversation().start(function(conversation) {
+    if (! conversation) return
 
-    console.log({ notification: notifications.build(firstUnread) })
-
-    notifications.post(firstUnread)
+    conversation.onUnread(function(unread) {
+      var firstUnread = unread[0]
+      notifications.post(firstUnread)
+    })
   })
 
 })()
