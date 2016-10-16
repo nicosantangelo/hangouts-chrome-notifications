@@ -3,8 +3,14 @@
 
   var SELECTORS = {
     conversations: '.kgwWAf',
+
     conversation : '.c-P.yd',
-    unread       : '.Bb.ee',
+
+    // The next two selectors are the same element
+    conversationData: '[hovercard-oid]',
+    unread          : '.Bb.ee',
+
+    muted: '.vfPIYe .Dg[role="alert"]',
 
     avatar: 'img.Yf',
     name  : 'div.lt.mG',
@@ -37,54 +43,103 @@
   // ==
 
   function Conversation() {
-    this.conversations = null
+    this.conversationsEl = null
+
+    this.cache = {
+      // oid: {
+        // name
+        // unread
+      // }
+    }
   }
+
+  Conversation.data = function(conversation) {
+    function find(selector) {
+      return conversation.querySelector(SELECTORS[selector])
+    }
+
+    var unreadSelectors = SELECTORS.unread.split('.').slice(1)
+
+    return {
+      oid   : conversation.getAttribute('hovercard-oid'),
+      name  : find('name').textContent,
+      text  : find('text').textContent,
+      avatar: find('avatar').src,
+      unread: unreadSelectors.every(function(className) { return conversation.classList.contains(className) })
+    }
+  }
+
   Conversation.prototype = {
     start: function(onFind) {
-      if (this.conversations) {
+      if (this.conversationsEl) {
         return onFind(this)
       }
 
       new Finder(SELECTORS.conversations).find(function(conversations) {
-        this.conversations = conversations
+        this.conversationsEl = conversations
+        this.buildCache()
         onFind(this)
       }.bind(this))
     },
+
     findUnread: function() {
-      var unreadConversations = this.conversations.querySelectorAll(SELECTORS.unread)
+      var unreadConversations = this.conversationsEl.querySelectorAll(SELECTORS.unread)
       console.log('Found', unreadConversations.length, 'unread conversations')
       return unreadConversations
     },
+
+    buildCache: function() {
+      var conversationElements = this.conversationsEl.querySelectorAll(SELECTORS.conversationData)
+      var conversation
+
+      for (var i = 0; i < conversationElements.length; i++) {
+        conversation = Conversation.data(conversationElements[i])
+        this.cache[conversation.oid] = conversation
+      }
+    },
+
     onUnread: function(callback) {
-      if(! this.conversations) throw new Error('You need to start the Conversations object first')
+      if(! this.conversationsEl) throw new Error('You need to start the Conversations object first')
 
-      var unreadConversations = this.findUnread()
+      var unreadConversationElements = this.findUnread()
+      var unreadConversations = []
+      var unreadConversation
+      var inCache
 
-      if (unreadConversations.length) {
+      for (var i = 0; i < unreadConversationElements.length; i++) {
+        unreadConversation = Conversation.data(unreadConversationElements[i])
+        inCache = this.cache[unreadConversation.oid]
+
+        if (! inCache || ! inCache.unread || inCache.text !== unreadConversation.text) {
+          unreadConversations.push(unreadConversation)
+          this.cache[unreadConversation.oid] = unreadConversation
+        }
+      }
+
+      if (unreadConversations.length && ! this.isMuted()) {
         callback(unreadConversations)
       }
 
-      // setTimeout(onUnread, 1000)
+      setTimeout(function() {
+        this.onUnread(callback)
+      }.bind(this), 1000)
+    },
+
+    isMuted: function() {
+      var unreadBanner = this.conversationsEl.querySelector(SELECTORS.muted)
+      return unreadBanner.style.display !== 'none'
     }
   }
 
   // ==
 
   var notifications = {
-    build: function(unreadChat) {
-      function find(selector) {
-        return unreadChat.querySelector(SELECTORS[selector])
-      }
-
-      return {
-        name  : find('name').textContent,
-        text  : find('text').textContent,
-        avatar: find('avatar').src
-      }
+    build: function(unreadConversation) {
+      return Conversation.data(unreadConversation)
     },
 
-    post: function(unreadChat) {
-      var notification = notifications.build(unreadChat)
+    post: function(notification) {
+      // var notification = notifications.build(unreadChat)
 
       getDataUri(notification.avatar, function(dataUri) {
         var port = chrome.extension.connect({ name: 'Hangouts' })
@@ -129,9 +184,8 @@
   new Conversation().start(function(conversation) {
     if (! conversation) return
 
-    conversation.onUnread(function(unread) {
-      var firstUnread = unread[0]
-      notifications.post(firstUnread)
+    conversation.onUnread(function(unreads) {
+      unreads.forEach(notifications.post)
     })
   })
 
