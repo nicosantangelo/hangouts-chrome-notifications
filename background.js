@@ -21,13 +21,14 @@ chrome.extension.onConnect.addListener(function(port) {
 
   port.onMessage.addListener(function(data, port) {
     var tab = port.sender.tab
-    var notificationId = tab.id + '-' + data.title
+    var notificationId = tab.id + '-' + data.name
+    var text = data.changes.becameOnline ? 'Is now online' : data.text
 
     chrome.notifications.create(notificationId, {
       type   : 'basic',
-      title  : data.title,
-      message: data.text,
-      iconUrl: data.avatar
+      title  : data.name,
+      iconUrl: data.avatar,
+      message: text,
     }, function(notificationId) {
       tabs[notificationId] = tab.id
     })
