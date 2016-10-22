@@ -84,7 +84,7 @@
 
     findUnread: function() {
       var unreadConversations = this.conversationsEl.querySelectorAll(SELECTORS.unread)
-      console.log('Found', unreadConversations.length, 'unread conversations')
+      // console.log('Found', unreadConversations.length, 'unread conversations')
       return unreadConversations
     },
 
@@ -144,15 +144,13 @@
       getDataUri(notification.avatar, function(dataUri) {
         var port = chrome.extension.connect({ name: 'Hangouts' })
 
-        port.postMessage({
-          title : notification.name,
-          text  : notification.text,
-          avatar: dataUri
-        })
-
-        port.onMessage.addListener(function(msg) {
-          console.log("message recieved " + msg)
-        })
+        if(document.hidden) {
+          port.postMessage({
+            title : notification.name,
+            text  : notification.text,
+            avatar: dataUri
+          })
+        }
       })
     }
   }
@@ -188,5 +186,4 @@
       unreads.forEach(notifications.post)
     })
   })
-
 })()
