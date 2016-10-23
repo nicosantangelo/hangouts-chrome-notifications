@@ -7,7 +7,7 @@
     conversation : '.c-P.yd',
 
     // The next two selectors are the same element
-    conversationData: '[hovercard-oid]',
+    conversationData: '[oid][cpar]',
     unread          : '.Bb.ee',
 
     online: '.Ux.Lz.flaeQ.pD',
@@ -50,7 +50,7 @@
     this.conversationsEl = null
 
     this.cache = {
-      // oid: {
+      // id: {
         // name
         // unread
         // ...
@@ -66,7 +66,7 @@
     var unreadSelectors = SELECTORS.unread.split('.').slice(1)
 
     return {
-      oid   : conversation.getAttribute('hovercard-oid'),
+      id   : conversation.getAttribute('cpar'),
       name  : find('name').textContent,
       text  : find('text').textContent,
       avatar: find('avatar').src,
@@ -92,7 +92,6 @@
 
     each: function(fn) {
       var conversations = this.conversationsEl.querySelectorAll(SELECTORS.conversationData)
-      console.log('Found', conversations.length, 'conversations')
 
       for (var i = 0; i < conversations.length; i++) {
         fn.call(this, Conversation.data(conversations[i]))
@@ -101,7 +100,7 @@
 
     buildCache: function() {
       this.each(function(conversation) {
-        this.cache[conversation.oid] = conversation
+        this.cache[conversation.id] = conversation
       })
     },
 
@@ -115,7 +114,7 @@
         var becameOnline = this.becameOnline(conversation)
 
         if ( becameUnread || becameOnline ) {
-          this.cache[conversation.oid] = conversation
+          this.cache[conversation.id] = conversation
 
           conversation.changes = { becameUnread: becameUnread, becameOnline: becameOnline }
           changedConversations.push(conversation)
@@ -130,12 +129,12 @@
     },
 
     becameUnread: function(conversation) {
-      var inCache = this.cache[conversation.oid]
+      var inCache = this.cache[conversation.id]
       return conversation.unread && (! inCache || ! inCache.unread || inCache.text !== conversation.text)
     },
 
     becameOnline: function(conversation) {
-      var inCache = this.cache[conversation.oid]
+      var inCache = this.cache[conversation.id]
       return conversation.online && (! inCache || ! inCache.online)
     },
 
