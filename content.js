@@ -19,12 +19,14 @@
     text  : '.ng.sQR2Rb'
   }
 
-  function Finder(selector) {
+  function Retrier(method, cap, delay) {
     var timeoutId = null
     var times = 0
+    cap = cap || 3
+    delay = delay || 2000
 
     this.find = function find(onFind, onError) {
-      var element = document.querySelector(selector)
+      var element = method()
 
       clearTimeout(timeoutId)
 
@@ -33,9 +35,9 @@
         return
       }
 
-      if (times < 3) {
+      if (times < cap) {
         times += 1
-        timeoutId = setTimeout(function() { find(onFind, onError) }, 2000)
+        timeoutId = setTimeout(function() { find(onFind, onError) }, delay)
       } else {
         onError && onError()
       }
@@ -79,7 +81,9 @@
         return onFind(this)
       }
 
-      new Finder(SELECTORS.conversations).find(function(conversations) {
+      new Retrier(function() {
+        return document.querySelector(SELECTORS.conversations)
+      }).find(function(conversations) {
         this.conversationsEl = conversations
         this.buildCache()
         onFind(this)
@@ -88,16 +92,15 @@
 
     each: function(fn) {
       var conversations = this.conversationsEl.querySelectorAll(SELECTORS.conversationData)
-      // console.log('Found', conversations.length, 'conversations')
+      console.log('Found', conversations.length, 'conversations')
 
       for (var i = 0; i < conversations.length; i++) {
-        fn.call(this, conversations[i])
+        fn.call(this, Conversation.data(conversations[i]))
       }
     },
 
     buildCache: function() {
-      this.each(function(conversationElement) {
-        var conversation = Conversation.data(conversationElement)
+      this.each(function(conversation) {
         this.cache[conversation.oid] = conversation
       })
     },
@@ -107,8 +110,7 @@
 
       var changedConversations = []
 
-      this.each(function(conversationElement) {
-        var conversation = Conversation.data(conversationElement)
+      this.each(function(conversation) {
         var becameUnread = this.becameUnread(conversation)
         var becameOnline = this.becameOnline(conversation)
 
@@ -129,12 +131,12 @@
 
     becameUnread: function(conversation) {
       var inCache = this.cache[conversation.oid]
-      return ! inCache || (! inCache.unread && conversation.unread) || inCache.text !== conversation.text
+      return conversation.unread && (! inCache || ! inCache.unread || inCache.text !== conversation.text)
     },
 
     becameOnline: function(conversation) {
       var inCache = this.cache[conversation.oid]
-      return ! inCache || (! inCache.online && conversation.online)
+      return conversation.online && (! inCache || ! inCache.online)
     },
 
     isMuted: function() {
@@ -146,14 +148,11 @@
   // ==
 
   var notifications = {
-    build: function(unreadConversation) {
-      return Conversation.data(unreadConversation)
-    },
-
     post: function(notification) {
       if(document.hidden) {
         getDataUri(notification.avatar, function(dataUri) {
           notification.avatar = dataUri
+          notification.SID = SID
 
           var port = chrome.extension.connect({ name: 'Hangouts' })
           port.postMessage(notification)
@@ -164,6 +163,11 @@
 
   // ----------------------------------------------------------
   // Utils
+
+  var SID = (function getSID() {
+    var match = document.cookie.match(/SID=([^\;]+)/)
+    return match && match[1]
+  })()
 
   function getDataUri(url, callback) {
     var image = new Image()
