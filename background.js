@@ -56,7 +56,7 @@ chrome.extension.onConnect.addListener(function(port) {
 //
 
 chrome.runtime.onInstalled.addListener(function(details) {
-  if (details.reason !== 'install' || details.reason !== 'update') return
+  if (details.reason !== 'install' && details.reason !== 'update') return
 
   var options = {}
 
