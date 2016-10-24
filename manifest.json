@@ -28,9 +28,9 @@
     }
   ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["configuration.js", "background.js"],
     "persistent": false
   },
-  "permissions": ["storage", "notifications"],
-  "web_accessible_resources": ["notifications.html"]
+  "options_page": "options/options.html",
+  "permissions": ["storage", "notifications"]
 }
