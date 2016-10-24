@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hangouts Notifications options</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" type="text/css" href="options.css">
+</head>
+<body>
+
+  <header>
+    <img src="../icons/128.png" width="104" alt="Hangouts Notifications">
+    <h1>Hangouts Notifications</h1>
+  </header>
+
+  <div class="configuration">
+    <div class="options">
+      <h4>Notify me when:</h4>
+      <div class="option">
+        <input type="checkbox" name="showOnlineNotifications" id="showOnlineNotifications">
+         A contact becomes online
+      </div>
+      <div class="option">
+        <input type="checkbox" name="showUnreadNotifications" id="showUnreadNotifications">
+        There's a new chat message
+      </div>
+    </div>
+
+    <br />
+
+    <div id="save" class="btn btn-primary">Save changes</div>&nbsp;&nbsp;
+
+    <br /> <br />
+
+    <div id="notice" class="notice hidden">
+      <span class="close-notice">x</span>
+      <b>Options saved!</b>
+    </div>
+  </div>
+
+  <script src="../configuration.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
