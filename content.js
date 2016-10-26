@@ -11,8 +11,9 @@
     unread          : '.Bb.ee',
 
     online: '.Ux.Lz.flaeQ.pD',
+    muted : '.wOu6w .zkWjbb.qpkz3b',
 
-    muted: '.vfPIYe .Dg[role="alert"]',
+    mutedBanner: '.vfPIYe .Dg[role="alert"]',
 
     avatar: 'img.Yf',
     name  : 'div.lt.mG',
@@ -66,11 +67,12 @@
     var unreadSelectors = SELECTORS.unread.split('.').slice(1)
 
     return {
-      id   : conversation.getAttribute('cpar'),
+      id    : conversation.getAttribute('cpar'),
       name  : find('name').textContent,
       text  : find('text').textContent,
       avatar: find('avatar').src,
       online: !! find('online'),
+      muted : find('muted').getAttribute('aria-label') === 'This conversation is muted.',
       unread: unreadSelectors.every(function(className) { return conversation.classList.contains(className) })
     }
   }
@@ -117,7 +119,10 @@
           this.cache[conversation.id] = conversation
 
           conversation.changes = { becameUnread: becameUnread, becameOnline: becameOnline }
-          changedConversations.push(conversation)
+
+          if (! conversation.muted) {
+            changedConversations.push(conversation)
+          }
         }
       })
 
@@ -139,7 +144,7 @@
     },
 
     isMuted: function() {
-      var unreadBanner = this.conversationsEl.querySelector(SELECTORS.muted)
+      var unreadBanner = this.conversationsEl.querySelector(SELECTORS.mutedBanner)
       return unreadBanner.style.display !== 'none'
     }
   }
