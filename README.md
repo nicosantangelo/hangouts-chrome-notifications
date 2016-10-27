@@ -2,9 +2,9 @@
 
 [Webstore](https://chrome.google.com/webstore/detail/hangouts-notifications/fbpmaadfebbedknhmeeijeicldjlegee)
 
-Chrome Extension which adds Chrome notifications to hangouts.
+Chrome Extension which adds Chrome notifications to the Hangouts webchat.
 
-It supports multiple hangouts instances (if you're using Gmail along with Hangouts a tab) and adds an *Online* notification.
+It supports multiple Hangouts instances (if you're using Gmail along with Hangouts a tab) and adds an *Online* notification.
 
 ## Notifies you when
 
@@ -15,3 +15,8 @@ It supports multiple hangouts instances (if you're using Gmail along with Hangou
 - There's a new chat message
 
 ![Chat Notification](http://i.imgur.com/an0xhxQ.png)
+
+## Configuration
+
+Both types of notification can be disabled from the options page. Furthermore the extension recognizes when notifications are muted from Hangouts (or a single convesation is muted).
+
