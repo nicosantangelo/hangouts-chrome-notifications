@@ -1,7 +1,8 @@
 ;(function () {
   var DEFAULT_CONFIGURATION = {
     showOnlineNotifications: true,
-    showUnreadNotifications: true
+    showUnreadNotifications: true,
+    expirationTime         : null
   }
 
   var configuration = {

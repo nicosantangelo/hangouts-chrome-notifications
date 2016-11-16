@@ -3,12 +3,20 @@
 ;(function() {
   var saveTimeout
   var notice = document.getElementById('notice')
+  var expirationTime = document.getElementById('expiration-time')
+  var expirationTimeValue = function() {
+    var value = parseInt(expirationTime.value)
+    return value && value > 0 ? value : null
+  }
   var elements = {}
 
   configuration.forEachDefault(function (key, value) {
     elements[key] = document.getElementById(key)
   })
 
+  configuration.get('expirationTime', function(time) {
+    expirationTime.value = time || ''
+  })
 
   // -----------------------------------------------------------------------------
   // Events
@@ -17,8 +25,12 @@
     var newValues = { }
 
     configuration.forEachDefault(function (key, value) {
-      newValues[key] = elements[key].checked
+      if(elements[key]) {
+        newValues[key] = elements[key].checked
+      }
     })
+
+    newValues['expirationTime'] = expirationTimeValue()
 
     configuration.set(newValues, function () {
       notice.classList.remove('hidden')
@@ -55,6 +67,8 @@
   })
 
   configuration.forEachCurrent(function(key, value) {
-    elements[key].checked = value
+    if(elements[key]) {
+      elements[key].checked = value
+    }
   })
 })()

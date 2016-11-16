@@ -17,10 +17,7 @@ chrome.extension.onConnect.addListener(function(port) {
         selected   : true,
         active     : true
       }, function(tab) {
-        chrome.windows.update(tab.windowId, { focused: true }, function() {
-          chrome.notifications.clear(notificationId)
-          delete tabs[notificationId]
-        })
+        chrome.windows.update(tab.windowId, { focused: true }, function() { clearNotification(notificationId) })
       })
     }
   })
@@ -37,17 +34,35 @@ chrome.extension.onConnect.addListener(function(port) {
       var text = changes.becameOnline ? 'Is now online' : data.text
       var url = tab.url.replace(/https?:\/\//, '').split('/')[0] // https://mail.google.com/mail/u/0/#inbox => mail.google.com
 
-      chrome.notifications.create(notificationId, {
-        type   : 'basic',
+      createNotification(notificationId, {
         title  : data.name,
         iconUrl: data.avatar,
         message: text,
-        contextMessage: 'From ' + url,
-      }, function(notificationId) {
-        tabs[notificationId] = tab.id
+        contextMessage: 'From ' + url
+      }, {
+        tabId: tab.id,
+        expirationTime: config.expirationTime
       })
     })
   })
+
+  function createNotification(notificationId, notification, options) {
+    notification.type = 'basic'
+    notification.requireInteraction = !! options.expirationTime
+
+    chrome.notifications.create(notificationId, notification, function(notificationId) {
+      tabs[notificationId] = options.tabId
+
+      if (notification.requireInteraction) {
+        setTimeout(function() { clearNotification(notificationId) }, options.expirationTime * 1000)
+      }
+    })
+  }
+
+  function clearNotification(notificationId) {
+    chrome.notifications.clear(notificationId)
+    delete tabs[notificationId]
+  }
 })
 
 
@@ -56,7 +71,7 @@ chrome.extension.onConnect.addListener(function(port) {
 //
 
 chrome.runtime.onInstalled.addListener(function(details) {
-  if (details.reason !== 'install' && details.reason !== 'update') return
+  if (details.reason !== 'install') return
 
   var options = {}
 
