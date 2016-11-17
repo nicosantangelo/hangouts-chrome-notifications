@@ -29,6 +29,10 @@ h4 {
   margin: 0 0 20px;
 }
 
+input {
+  box-sizing: border-box;
+}
+
 .hidden {
   display: none;
 }
@@ -67,12 +71,10 @@ small.new {
 
 .expiration-time {
   margin-top: 4px;
-  padding-left: 20px;
-  padding-right: 30px;
 }
 
 .expiration-time input {
-  width: 80%;
+  width: 100%;
   padding: 4px 8px;
   margin: 5px 0;
   font-size: 14px;
@@ -92,8 +94,8 @@ small.new {
   position: relative;
   display: inline-block;
   padding: 6px 12px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 20px;
   color: #333;
   white-space: nowrap;
@@ -101,6 +103,9 @@ small.new {
   cursor: pointer;
   border: 1px solid #d5d5d5;
   border-radius: 3px;
+  width: 70%;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .btn-primary {
