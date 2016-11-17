@@ -30,7 +30,7 @@
       }
     })
 
-    newValues['expirationTime'] = expirationTimeValue()
+    expirationTime.value = newValues['expirationTime'] = expirationTimeValue()
 
     configuration.set(newValues, function () {
       notice.classList.remove('hidden')
