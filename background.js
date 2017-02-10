@@ -29,6 +29,7 @@ chrome.extension.onConnect.addListener(function(port) {
     configuration.get(function(config) {
       if (changes.becameOnline && ! config.showOnlineNotifications) return
       if (changes.becameUnread && ! config.showUnreadNotifications) return
+      if (data.tabActive && config.fireOnInactiveTab) return
 
       var notificationId = data.SID + '-' + data.name
       var text = changes.becameOnline ? 'Is now online' : data.text

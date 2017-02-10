@@ -153,15 +153,14 @@
 
   var notifications = {
     post: function(notification) {
-      if(document.hidden) {
-        getDataUri(notification.avatar, function(dataUri) {
-          notification.avatar = dataUri
-          notification.SID = SID
+      getDataUri(notification.avatar, function(dataUri) {
+        notification.tabActive = ! document.hidden
+        notification.avatar = dataUri
+        notification.SID = SID
 
-          var port = chrome.extension.connect({ name: 'Hangouts' })
-          port.postMessage(notification)
-        })
-      }
+        var port = chrome.extension.connect({ name: 'Hangouts' })
+        port.postMessage(notification)
+      })
     }
   }
 

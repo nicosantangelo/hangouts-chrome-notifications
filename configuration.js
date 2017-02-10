@@ -2,6 +2,7 @@
   var DEFAULT_CONFIGURATION = {
     showOnlineNotifications: true,
     showUnreadNotifications: true,
+    fireOnInactiveTab      : true,
     expirationTime         : null
   }
 
