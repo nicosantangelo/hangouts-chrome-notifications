@@ -45,9 +45,10 @@
     }
   }
 
+
   // ==
 
-  function Conversation() {
+  function Roster() {
     this.conversationsEl = null
 
     this.cache = {
@@ -59,45 +60,7 @@
     }
   }
 
-  Conversation.data = function(conversation) {
-    function find(selector) {
-      return conversation.querySelector(SELECTORS[selector])
-    }
-    function findAll(selector) {
-      return conversation.querySelectorAll(SELECTORS[selector])
-    }
-
-    var unreadSelectors = SELECTORS.unread.split('.').slice(1)
-    var multiple = ! conversation.getAttribute('hovercard-oid')
-    var text = find('text').textContent
-    var avatar = ''
-
-    if (multiple) {
-      var author = text.split(':')[0]
-
-      for(var i = 0, avatars = findAll('avatar'); i < avatars.length; i++) {
-        if (avatars[i].alt.search(author) !== -1) {
-          avatar = avatars[i].src
-          break
-        }
-      }
-    } else {
-      avatar = find('avatar').src
-    }
-
-    return {
-      id      : conversation.getAttribute('cpar'),
-      text    : text,
-      avatar  : avatar,
-      multiple: multiple,
-      name    : find('name').textContent,
-      online  : !! find('online'),
-      muted   : find('muted').getAttribute('aria-label') === 'This conversation is muted.',
-      unread  : unreadSelectors.every(function(className) { return conversation.classList.contains(className) }),
-    }
-  }
-
-  Conversation.prototype = {
+  Roster.prototype = {
     start: function(onFind) {
       if (this.conversationsEl) {
         return onFind(this)
@@ -116,7 +79,7 @@
       var conversations = this.conversationsEl.querySelectorAll(SELECTORS.conversationData)
 
       for (var i = 0; i < conversations.length; i++) {
-        fn.call(this, Conversation.data(conversations[i]))
+        fn.call(this, new Conversation(conversations[i]).getData())
       }
     },
 
@@ -169,6 +132,89 @@
     }
   }
 
+
+  // ==
+
+  function Conversation(conversation) {
+    this.conversation = conversation
+  }
+
+  Conversation.prototype = {
+    getData: function() {
+      return {
+        id      : this.getAttribute('cpar'),
+        text    : this.getText(),
+        name    : this.getName(),
+        avatar  : this.getActiveAvatar(),
+        multiple: this.isMultiple(),
+        online  : this.isOnline(),
+        muted   : this.isMuted(),
+        unread  : this.isUnread()
+      }
+    },
+
+    isOnline: function() {
+      return !! this.find('online')
+    },
+
+    isMultiple: function() {
+      return ! this.conversation.getAttribute('hovercard-oid')
+    },
+
+    isUnread: function() {
+      var unreadSelectors = SELECTORS.unread.split('.').slice(1)
+      var classList = this.conversation.classList
+      return unreadSelectors.every(function(className) { return classList.contains(className) })
+    },
+
+    isMuted: function() {
+      return this.find('muted').getAttribute('aria-label') === 'This conversation is muted.'
+    },
+
+    getText: function() {
+      return this.find('text').textContent
+    },
+
+    getName: function() {
+      return this.find('name').textContent
+    },
+
+    getActiveAvatar: function() {
+      var avatar = ''
+
+      if (this.isMultiple()) {
+        var author = this.getActiveName()
+
+        for(var i = 0, avatars = this.findAll('avatar'); i < avatars.length; i++) {
+          if (avatars[i].alt.search(author) !== -1) {
+            avatar = avatars[i].src
+            break
+          }
+        }
+      }
+
+      return avatar || this.find('avatar').src
+    },
+
+    getActiveName: function() {
+      var text = this.find('text').textContent
+      return text.split(':')[0]
+    },
+
+    getAttribute: function(name) {
+      return this.conversation.getAttribute(name)
+    },
+
+    find: function(selector) {
+      return this.conversation.querySelector(SELECTORS[selector])
+    },
+
+    findAll: function(selector) {
+      return this.conversation.querySelectorAll(SELECTORS[selector])
+    }
+  }
+
+
   // ==
 
   var notifications = {
@@ -213,10 +259,10 @@
   // ----------------------------------------------------------
   // Main
 
-  new Conversation().start(function(conversation) {
-    if (! conversation) return
+  new Roster().start(function(roster) {
+    if (! roster) return
 
-    conversation.onChange(function(changes) {
+    roster.onChange(function(changes) {
       changes.forEach(notifications.post)
     })
   })
