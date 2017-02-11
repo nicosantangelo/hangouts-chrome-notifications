@@ -63,17 +63,37 @@
     function find(selector) {
       return conversation.querySelector(SELECTORS[selector])
     }
+    function findAll(selector) {
+      return conversation.querySelectorAll(SELECTORS[selector])
+    }
 
     var unreadSelectors = SELECTORS.unread.split('.').slice(1)
+    var multiple = ! conversation.getAttribute('hovercard-oid')
+    var text = find('text').textContent
+    var avatar = ''
+
+    if (multiple) {
+      var author = text.split(':')[0]
+
+      for(var i = 0, avatars = findAll('avatar'); i < avatars.length; i++) {
+        if (avatars[i].alt.search(author) !== -1) {
+          avatar = avatars[i].src
+          break
+        }
+      }
+    } else {
+      avatar = find('avatar').src
+    }
 
     return {
-      id    : conversation.getAttribute('cpar'),
-      name  : find('name').textContent,
-      text  : find('text').textContent,
-      avatar: find('avatar').src,
-      online: !! find('online'),
-      muted : find('muted').getAttribute('aria-label') === 'This conversation is muted.',
-      unread: unreadSelectors.every(function(className) { return conversation.classList.contains(className) })
+      id      : conversation.getAttribute('cpar'),
+      text    : text,
+      avatar  : avatar,
+      multiple: multiple,
+      name    : find('name').textContent,
+      online  : !! find('online'),
+      muted   : find('muted').getAttribute('aria-label') === 'This conversation is muted.',
+      unread  : unreadSelectors.every(function(className) { return conversation.classList.contains(className) }),
     }
   }
 
