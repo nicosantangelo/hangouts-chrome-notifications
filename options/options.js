@@ -15,7 +15,7 @@
     }
   }
 
-  var disabledDomains = {
+  var disabledUrls = {
     toArray: function(domains) {
       var array = []
 
@@ -45,8 +45,8 @@
         if(element.type === 'checkbox') {
           element.checked = value
         } else {
-          if(key === 'disabledDomains') {
-            element.value = disabledDomains.fromArray(value)
+          if(key === 'disabledUrls') {
+            element.value = disabledUrls.fromArray(value)
           } else {
             element.value = value
           }
@@ -64,8 +64,8 @@
         if(element.type === 'checkbox') {
           newValues[key] = element.checked
         } else {
-          if(key === 'disabledDomains') {
-            newValues[key] = disabledDomains.toArray(element.value)
+          if(key === 'disabledUrls') {
+            newValues[key] = disabledUrls.toArray(element.value)
           } else if(key === 'expirationTime') {
             newValues[key] = expirationTime.parseValue(element.value)
           } else {
@@ -103,8 +103,8 @@
 
 
   addEventListener('.js-disable-example', 'click', function() {
-    var domainsTextarea = document.getElementById('disabledDomains')
-    var currentDomains = disabledDomains.toArray(domainsTextarea.value)
+    var domainsTextarea = document.getElementById('disabledUrls')
+    var currentDomains = disabledUrls.toArray(domainsTextarea.value)
     var href = this.dataset.href
 
     if (currentDomains.length === 0) {

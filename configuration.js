@@ -4,7 +4,7 @@
     showUnreadNotifications: true,
     fireOnInactiveTab      : true,
     expirationTime         : null,
-    disabledDomains        : [],
+    disabledUrls           : [],
   }
 
   var configuration = {
