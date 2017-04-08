@@ -3,7 +3,8 @@
     showOnlineNotifications: true,
     showUnreadNotifications: true,
     fireOnInactiveTab      : true,
-    expirationTime         : null
+    expirationTime         : null,
+    disabledDomains        : [],
   }
 
   var configuration = {

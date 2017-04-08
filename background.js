@@ -27,6 +27,7 @@ chrome.extension.onConnect.addListener(function(port) {
     var changes = data.changes
 
     configuration.get(function(config) {
+      if (isUrlDisabled(tab.url, config.disabledDomains)) return
       if (changes.becameOnline && ! config.showOnlineNotifications) return
       if (changes.becameUnread && ! config.showUnreadNotifications) return
       if (data.tabActive && config.fireOnInactiveTab) return
@@ -63,6 +64,14 @@ chrome.extension.onConnect.addListener(function(port) {
   function clearNotification(notificationId) {
     chrome.notifications.clear(notificationId)
     delete tabs[notificationId]
+  }
+
+  function isUrlDisabled(url, disabledDomains) {
+    disabledDomains = disabledDomains || []
+
+    for(var i = 0; i < disabledDomains.length; i++) {
+      if (url.search(disabledDomains[i]) !== -1) return true
+    }
   }
 })
 
