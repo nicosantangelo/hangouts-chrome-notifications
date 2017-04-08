@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 14px;
@@ -7,10 +11,11 @@ body {
 }
 
 a {
-  color: #4078c0;
+  color: rgba(16, 157, 89, 0.82);
   text-decoration: none;
 }
 a:hover, a:active {
+  color: #109d59;
   text-decoration: underline;
 }
 
@@ -22,26 +27,48 @@ header {
 
 h1 {
   font-weight: 400;
-  margin-bottom: 15px;
 }
 
 h4 {
   margin: 0 0 20px;
 }
 
-input {
-  box-sizing: border-box;
-}
-
 .hidden {
   display: none;
 }
 
+.as-link {
+  color: rgba(16, 157, 89, 0.82);
+  cursor: pointer;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.title {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-size: 30px;
+}
+
 .configuration {
-  width: 280px;
+  width: 300px;
   margin: auto;
   padding: 10px;
 }
+
+.options .option-group {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #F2F2F2;
+}
+.options .option-group:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
 .option {
   margin-bottom: 10px;
   border-bottom: 4px solid white;
@@ -51,15 +78,16 @@ input {
   padding: 10px;
   margin: 15px 0;
   color: #FFF;
-  background-color: #109d59;
+  background-color: rgba(16, 157, 89, 0.8);
   border: 1px solid #0a7d44;
 }
 
 span.close-notice {
-  color: #FFF;
   float: right;
-  cursor: pointer;
+  font-weight: 400;
   font-family: Helvetica, sans-serif;
+  color: #FFF;
+  cursor: pointer;
 }
 span.close-notice:hover {
   color: #F2F2F2;
@@ -73,7 +101,7 @@ small.new {
   margin-top: 4px;
 }
 
-.expiration-time input {
+.input {
   width: 100%;
   padding: 4px 8px;
   margin: 5px 0;
@@ -85,9 +113,14 @@ small.new {
   outline: none;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
 }
-.expiration-time input:focus {
+.input:focus {
   border-color: #51A7E8;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.075),0 0 5px #109d59;
+}
+
+textarea.input {
+  padding: 5px 10px;
+  font-size: 13px;
 }
 
 .btn {
@@ -103,7 +136,7 @@ small.new {
   cursor: pointer;
   border: 1px solid #d5d5d5;
   border-radius: 3px;
-  width: 70%;
+  width: 100%;
   text-align: center;
   text-transform: uppercase;
 }
@@ -111,8 +144,8 @@ small.new {
 .btn-primary {
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0,0,0,0.15);
-  background-color: #109d59;
-  border-color: #109d59;
+  background-color: rgba(16, 157, 89, 0.8);
+  border-color: rgba(16, 157, 89, 0.8);
 }
 
 .save-button {
