@@ -161,6 +161,9 @@
 
   options.setCurrentSaved()
 
+  setTimeout(function() {
+    document.querySelector('.configuration').classList.add('visible')
+  }, 5)
 
   // -----------------------------------------------------------------------------
   // Utils

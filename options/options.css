@@ -56,6 +56,11 @@ h4 {
   width: 300px;
   margin: auto;
   padding: 10px;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+.configuration.visible {
+  opacity: 1;
 }
 
 .options .option-group {
