@@ -20,7 +20,7 @@
   <div class="configuration">
     <div class="options">
       <div class="option-group">
-        <h4>Notify me when</h4>
+        <h4>Notify me when <span class="as-link" data-balloon="If left unchecked the notification will appear even if you're looking at the page that has the Hangouts chat" data-balloon-length="large">?</span></h4>
         <div class="option">
           <input type="checkbox" name="showOnlineNotifications" id="showOnlineNotifications">
            A contact becomes online
@@ -35,7 +35,7 @@
         <h4>Only show notifications when</h4>
         <div class="option">
           <input type="checkbox" name="fireOnInactiveTab" id="fireOnInactiveTab">
-          <span>The hangouts tab is inactive</span>  <span class="as-link" data-balloon="If left unchecked the notification will appear even if you're looking at the page that has the Hangouts chat" data-balloon-length="large">?</span>
+          <span>The hangouts tab is inactive</span>  <span class="as-link" ata-balloon="If left unchecked the notification will appear even if you're looking at the page that has the Hangouts chat" data-balloon-length="large">?</span>
         </div>
       </div>
 
@@ -44,9 +44,9 @@
           <b>Notifications expiration time</b>
 
           <div class="expiration-time">
-            <input type="text" id="expirationTime" class="input" placeholder="Time in seconds">
+            <input type="text" id="expirationTime" class="input" placeholder="Time in seconds (8 seconds by default)">
             <br />
-            <small>If it's invalid or empty, the Chrome default is used, approximately 8 seconds.</small>
+            <small>If it's invalid or empty, the Chrome default is used, which is approximately 8 seconds.</small>
           </div>
         </div>
       </div>
@@ -55,13 +55,14 @@
         <div class="option">
           <b>Disable on</b>
           <div>
-            <small>One per line, you can put only a chunk, examples:</small>
+            <small>Stop certain URLs from sending notifications <span class="as-link" data-balloon="To disable certain Google products or accounts from firing notifications, you can add URLs to disable below, one per line" data-balloon-length="large">?</span><br />Try clicking the items below to see how it works:</small>
             <ul>
               <li><small><span class="js-disable-example as-link" data-href="mail.google.com">Gmail</span></small></li>
               <li><small><span class="js-disable-example as-link" data-href="inbox.google.com">Inbox</span></small></li>
               <li><small><span class="js-disable-example as-link" data-href="hangouts.google.com">Hangouts</span></small></li>
             </ul>
-            <textarea id="disabledUrls" class="input" name="disabledUrls" cols="40" rows="5" placeholder="Write your desired filters here"></textarea>
+            <textarea id="disabledUrls" class="input" name="disabledUrls" cols="40" rows="5" placeholder="Write your desired URL filters here"></textarea>
+            <small>Google recognizes the logged account using the URL, you can use this to disable an specific account.<br />For example, if you have two Gmail accounts, one will end with <span class="js-disable-example as-link" data-href="mail.google.com/mail/u/0">/mail/u/0</span> and the other with <span class="js-disable-example as-link" data-href="mail.google.com/mail/u/1">/mail/u/1</span>.</small>
           </div>
         </div>
       </div>
