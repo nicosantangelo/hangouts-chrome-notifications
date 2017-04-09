@@ -99,6 +99,8 @@
     })
 
     options.setCurrentSaved()
+
+    ga('send', 'event', 'Options', 'save', 'Saved options, with the configuration: ' + JSON.stringify(newValues))
   })
 
 
