@@ -64,7 +64,8 @@ h4 {
   margin-bottom: 10px;
   border-bottom: 1px solid #F2F2F2;
 }
-.options .option-group:last-child {
+
+.options .option-group.no-border {
   border-bottom: none;
 }
 

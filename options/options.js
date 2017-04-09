@@ -117,6 +117,26 @@
   })
 
 
+  addEventListener('#js-toggle-advanced', 'click', function() {
+    var status = {
+      visible: {
+        text: 'Show advanced',
+        action: function(el) { el.classList.add('hidden') },
+        counterpart: 'hidden'
+      },
+      hidden: {
+        text: 'Hide advanced',
+        action: function(el) { el.classList.remove('hidden') },
+        counterpart: 'visible'
+      }
+    }[this.dataset.advancedStatus]
+
+    forEachDomElement('.advanced-options', status.action)
+    this.textContent = status.text
+    this.dataset.advancedStatus = status.counterpart
+  })
+
+
   addEventListener('#js-close-notice', 'click', function() {
     this.parentElement.classList.add('hidden')
   })
@@ -146,14 +166,17 @@
   // Utils
 
   function addEventListener(selector, event, callback) {
-    var elements = document.querySelectorAll(selector)
-
-    Array.prototype.forEach.call(elements, function(element) {
+    forEachDomElement(selector, function(element) {
       element.addEventListener(event, callback, false)
     })
   }
 
   function isEmptyString(str) {
     return ! str || ! str.trim()
+  }
+
+  function forEachDomElement(selector, callback) {
+    var elements = document.querySelectorAll(selector)
+    return Array.prototype.forEach.call(elements, callback)
   }
 })()
