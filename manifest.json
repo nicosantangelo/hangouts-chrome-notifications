@@ -32,5 +32,6 @@
     "persistent": false
   },
   "options_page": "options/options.html",
-  "permissions": ["storage", "notifications"]
+  "permissions": ["storage", "notifications"],
+  "content_security_policy": "default-src 'self'; script-src 'self' https://www.google-analytics.com; img-src 'self' https://www.google-analytics.com https://stats.g.doubleclick.net data:"
 }

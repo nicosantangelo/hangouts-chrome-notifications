@@ -38,6 +38,8 @@
       clearTimeout(saveTimeout)
       saveTimeout = setTimeout(function () { notice.classList.add('hidden') }, 4000)
     })
+
+    ga('send', 'event', 'Options', 'save', 'Saved options, with the configuration: ' + JSON.stringify(newValues))
   }, false)
 
 
