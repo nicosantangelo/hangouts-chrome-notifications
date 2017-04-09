@@ -23,7 +23,7 @@
         domains = domains.split('\n')
 
         for(var i = 0; i < domains.length; i++) {
-          if (array.indexOf(domains[i]) === -1) array.push(domains[i])
+          if (! isEmptyString(domains[i]) && array.indexOf(domains[i]) === -1) array.push(domains[i])
         }
       }
 
@@ -149,5 +149,9 @@
     Array.prototype.forEach.call(elements, function(element) {
       element.addEventListener(event, callback, false)
     })
+  }
+
+  function isEmptyString(str) {
+    return ! str || ! str.trim()
   }
 })()
