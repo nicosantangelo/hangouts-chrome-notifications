@@ -81,7 +81,7 @@ h4 {
 
 .notice {
   padding: 10px;
-  margin: 15px 0;
+  margin: 10px 0;
   color: #FFF;
   background-color: rgba(16, 157, 89, 0.8);
   border: 1px solid #0a7d44;
@@ -155,4 +155,8 @@ textarea.input {
 
 .save-button {
   text-align: center;
+}
+
+.mailto {
+  margin-top: 4px;
 }
