@@ -265,5 +265,7 @@
     roster.onChange(function(changes) {
       changes.forEach(notifications.post)
     })
+
+    chrome.runtime.sendMessage({ type: 'icon', active: true })
   })
 })()

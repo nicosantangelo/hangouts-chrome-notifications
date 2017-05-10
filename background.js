@@ -77,11 +77,31 @@ chrome.extension.onConnect.addListener(function(port) {
 
 
 //
+// onMessage listener
+//
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  switch(request.type) {
+    case 'icon':
+      let status = request.active ? '' : 'inactive_'
+
+      chrome.browserAction.setIcon({
+        path: {
+          19: 'icons/' + status + '19.png',
+          38: 'icons/' + status + '38.png'
+        },
+        tabId: sender.tab.id
+      })
+      break
+  }
+})
+
+//
 // On installed/updated
 //
 
 chrome.runtime.onInstalled.addListener(function(details) {
-  if (details.reason !== 'install' && details.reason !== 'update') return
+  if (details.reason !== 'install') return
 
   var options = {}
 
