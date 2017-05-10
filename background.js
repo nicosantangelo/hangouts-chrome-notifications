@@ -101,16 +101,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 //
 
 chrome.runtime.onInstalled.addListener(function(details) {
-  if (details.reason !== 'install') return
+  if (details.reason !== 'install' && details.reason !== 'update') return
 
   var options = {}
 
-  if(details.reason === 'install') {
-    options['firstInstall'] = true
+  if(details.reason === 'update') {
+    options['justUpdated'] = 1
   }
 
-  if(details.reason === 'update') {
-    options['justUpdated'] = 2
+  if(details.reason === 'install') {
+    options['firstInstall'] = true
+    options['justUpdated'] = 0
   }
 
   chrome.storage.local.set(options, function () {
