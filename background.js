@@ -86,10 +86,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
     options['justUpdated'] = 0
   }
 
-  chrome.storage.local.set(options, function () {
-    var OPTIONS_URL = chrome.extension.getURL('options/options.html')
-    chrome.tabs.create({ url: OPTIONS_URL })
-  })
+  chrome.storage.local.set(options, openOptionsPage)
 
   Notification.clearAll()
 })
