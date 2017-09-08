@@ -31,7 +31,7 @@
         playSound: false
       }
 
-      if (! options) return options
+      if (! options) return settings
 
       for (key in settings) {
         if (options[key] != null) settings[key] = options[key]
@@ -75,6 +75,8 @@
 
   Notification.clearAll = function(notificationId) {
     chrome.notifications.getAll(function(notifications) {
+      if (! notifications) return
+
       for (var id in notifications) {
         if (id.indexOf(Notification.PREFIX) !== -1) chrome.notifications.clear(id)
       }
