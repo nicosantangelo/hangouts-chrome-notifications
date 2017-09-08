@@ -30,11 +30,12 @@ chrome.extension.onConnect.addListener(function(port) {
       if (isUrlDisabled(tab.url, config.disabledUrls)) return
       if (changes.becameOnline && ! config.showOnlineNotifications) return
       if (changes.becameUnread && ! config.showUnreadNotifications) return
+      if (config.muteAllExcept && config.muteAllExcept.indexOf(data.name) === -1) return
       if (data.tabActive && config.fireOnInactiveTab) return
 
-      var notificationId = data.SID + '-' + data.name
+      var notificationId = getNotificationId()
       var text = changes.becameOnline ? 'Is now online' : data.text
-      var url = tab.url.replace(/https?:\/\//, '').split('/')[0] // https://mail.google.com/mail/u/0/#inbox => mail.google.com
+      var url = getBasename(tab.url)
 
       createNotification(notificationId, {
         title  : data.name,
@@ -43,14 +44,17 @@ chrome.extension.onConnect.addListener(function(port) {
         contextMessage: 'From ' + url
       }, {
         tabId: tab.id,
-        expirationTime: config.expirationTime
+        expirationTime: config.expirationTime || 8
       })
     })
   })
 
+  function getNotificationId(data) {
+    return data.SID + '-' + data.name
+  }
+
   function createNotification(notificationId, notification, options) {
     notification.type = 'basic'
-    notification.requireInteraction = !! options.expirationTime
 
     chrome.notifications.create(notificationId, notification, function(notificationId) {
       tabs[notificationId] = options.tabId
@@ -72,6 +76,10 @@ chrome.extension.onConnect.addListener(function(port) {
     for(var i = 0; i < disabledUrls.length; i++) {
       if (url.search(disabledUrls[i]) !== -1) return true
     }
+  }
+
+  function getBasename(url) {
+    return url.replace(/https?:\/\//, '').split('/')[0] // https://mail.google.com/mail/u/0/#inbox => mail.google.com
   }
 })
 
