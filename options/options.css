@@ -22,11 +22,11 @@ a:hover, a:active {
 header {
   text-align: center;
   margin-top: 35px;
-  color: #000;
 }
 
 h1 {
   font-weight: 400;
+  color: #000;
 }
 
 h4 {
@@ -50,6 +50,11 @@ h4 {
   margin-top: 15px;
   margin-bottom: 5px;
   font-size: 30px;
+}
+
+.description {
+  max-width: 400px;
+  margin: 20px auto 0;
 }
 
 .configuration {
@@ -155,6 +160,16 @@ textarea.input {
 
 .save-button {
   text-align: center;
+}
+
+.help-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.help-list li {
+  margin-bottom: 5px;
 }
 
 .mailto {
