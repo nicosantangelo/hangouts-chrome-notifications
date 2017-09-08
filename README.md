@@ -12,11 +12,11 @@ It supports multiple Hangouts instances (if you're using Gmail along with Hangou
 
 - A contact becomes online
 
-![Online Notification](http://i.imgur.com/K4CK2dD.png)
+![Online Notification](http://i.imgur.com/fgX9hg3.png)
 
 - There's a new chat message
 
-![Chat Notification](http://i.imgur.com/an0xhxQ.png)
+![Chat Notification](http://i.imgur.com/ALFzEXz.png)
 
 ## Configuration
 
