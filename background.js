@@ -1,23 +1,19 @@
 /* Globals: configuration */
 
-//
+
+// ----------------------------------------------------------
 // Messages from the front-end
-//
 
 chrome.extension.onConnect.addListener(function(port) {
-  var tabs = {
-    // notificationId: tabId
-  }
-
   chrome.notifications.onClicked.addListener(function(notificationId) {
-    var tabId = tabs[notificationId]
+    var tabId = Notification.cache[notificationId]
 
     if (tabId) {
       chrome.tabs.update(tabId, {
         selected   : true,
         active     : true
       }, function(tab) {
-        chrome.windows.update(tab.windowId, { focused: true }, function() { clearNotification(notificationId) })
+        chrome.windows.update(tab.windowId, { focused: true }, function() { Notification.clear(notificationId) })
       })
     }
   })
@@ -33,42 +29,21 @@ chrome.extension.onConnect.addListener(function(port) {
       if (config.muteAllExcept && config.muteAllExcept.indexOf(data.name) === -1) return
       if (data.tabActive && config.fireOnInactiveTab) return
 
-      var notificationId = getNotificationId()
-      var text = changes.becameOnline ? 'Is now online' : data.text
-      var url = getBasename(tab.url)
-
-      createNotification(notificationId, {
+      var notificationData = {
         title  : data.name,
         iconUrl: data.avatar,
-        message: text,
-        contextMessage: 'From ' + url
-      }, {
-        tabId: tab.id,
-        expirationTime: config.expirationTime || 8
+        message: changes.becameOnline ? 'Is now online' : data.text,
+        contextMessage: 'From ' + getBasename(tab.url)
+      }
+
+      var notification = new Notification(notificationData, {
+        expirationTime: config.expirationTime,
+        playSound: config.playSound
       })
+
+      notification.send(tab.id)
     })
   })
-
-  function getNotificationId(data) {
-    return data.SID + '-' + data.name
-  }
-
-  function createNotification(notificationId, notification, options) {
-    notification.type = 'basic'
-
-    chrome.notifications.create(notificationId, notification, function(notificationId) {
-      tabs[notificationId] = options.tabId
-
-      if (notification.requireInteraction) {
-        setTimeout(function() { clearNotification(notificationId) }, options.expirationTime * 1000)
-      }
-    })
-  }
-
-  function clearNotification(notificationId) {
-    chrome.notifications.clear(notificationId)
-    delete tabs[notificationId]
-  }
 
   function isUrlDisabled(url, disabledUrls) {
     disabledUrls = disabledUrls || []
@@ -84,9 +59,8 @@ chrome.extension.onConnect.addListener(function(port) {
 })
 
 
-//
+// ----------------------------------------------------------
 // onMessage listener
-//
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   switch(request.type) {
@@ -104,9 +78,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 })
 
-//
+
+// ----------------------------------------------------------
 // On installed/updated
-//
 
 chrome.runtime.onInstalled.addListener(function(details) {
   if (details.reason !== 'install' && details.reason !== 'update') return
@@ -126,4 +100,87 @@ chrome.runtime.onInstalled.addListener(function(details) {
     var OPTIONS_URL = chrome.extension.getURL('options/options.html')
     chrome.tabs.create({ url: OPTIONS_URL })
   })
+
+  Notification.clearAll()
 })
+
+
+
+// ----------------------------------------------------------
+// Notification
+
+function Notification(data, options) {
+  this.data = this.buildData(data)
+  this.id = this.buildId()
+  this.options = this.buildOptions(options)
+}
+
+Notification.prototype = {
+  buildData: function(data) {
+    return Object.assign({ type: 'basic', }, data)
+  },
+
+  buildId: function() {
+    return [
+      Notification.PREFIX,
+      this.data.SID,
+      this.data.name,
+      this.data.text
+    ].join('-')
+  },
+
+  buildOptions: function(options) {
+    var settings = {
+      expirationTime: 8,
+      playSound: false
+    }
+
+    if (! options) return options
+
+    for (key in settings) {
+      if (options[key] != null) settings[key] = options[key]
+    }
+
+    return settings
+  },
+
+  send: function(tabId) {
+    if (this.options.playSound) {
+      this.playSound()
+    }
+
+    chrome.notifications.create(this.id, this.data, function() {
+      Notification.cache[this.id] = tabId
+      setTimeout(this.clear.bind(this), this.options.expirationTime * 1000)
+    }.bind(this))
+  },
+
+  playSound: function() {
+    var ding = new Audio()
+    ding.src = chrome.extension.getURL('audio/ding.mp3')
+    ding.play()
+  },
+
+  clear: function() {
+    Notification.clear(this.id)
+  }
+}
+
+Notification.PREFIX = '[HangoutsNotifications]'
+
+Notification.cache = {
+  // notificationId: tabId
+}
+
+Notification.clear = function(notificationId) {
+  chrome.notifications.clear(notificationId)
+  delete Notification.cache[notificationId]
+}
+
+Notification.clearAll = function(notificationId) {
+  chrome.notifications.getAll(function(notifications) {
+    for (var id in notifications) {
+      if (id.indexOf(Notification.PREFIX) !== -1) chrome.notifications.clear(id)
+    }
+  })
+}

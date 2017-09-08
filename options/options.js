@@ -87,7 +87,7 @@
 
   var saveTimeout = null
 
-  addEventListener('#js-save', 'click', function save() {
+  addEventListener('#js-save', 'submit', function save(event) {
     var notice = document.getElementById('notice')
     var newValues = options.getFromHTML()
 
@@ -98,9 +98,10 @@
       saveTimeout = setTimeout(function() { notice.classList.add('hidden') }, 4000)
     })
 
-    options.setCurrentSaved()
-
     ga('send', 'event', 'Options', 'save', 'Saved options, with the configuration: ' + JSON.stringify(newValues))
+
+    options.setCurrentSaved()
+    event.preventDefault()
   })
 
 

@@ -5,6 +5,7 @@
     fireOnInactiveTab      : true,
     expirationTime         : null,
     muteAllExcept          : '',
+    playSound              : false,
     disabledUrls           : [],
   }
 
