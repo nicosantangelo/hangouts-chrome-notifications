@@ -37,7 +37,7 @@
     }
   ],
   "background": {
-    "scripts": ["configuration.js", "background.js"],
+    "scripts": ["configuration.js", "Notification.js", "background.js"],
     "persistent": false
   },
   "options_page": "options/options.html",
