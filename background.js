@@ -29,14 +29,10 @@ chrome.extension.onConnect.addListener(function(port) {
       if (config.muteAllExcept && config.muteAllExcept.indexOf(data.name) === -1) return
       if (data.tabActive && config.fireOnInactiveTab) return
 
-      var notificationData = {
-        title  : data.name,
-        iconUrl: data.avatar,
-        message: changes.becameOnline ? 'Is now online' : data.text,
-        contextMessage: 'From ' + getBasename(tab.url)
-      }
+      data.message = changes.becameOnline ? 'Is now online' : data.text,
+      data.contextMessage = 'From ' + getBasename(tab.url)
 
-      var notification = new Notification(notificationData, {
+      var notification = new Notification(data, {
         expirationTime: config.expirationTime,
         playSound: config.playSound
       })

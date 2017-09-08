@@ -1,21 +1,27 @@
 (function() {
   function Notification(data, options) {
     this.data = this.buildData(data)
-    this.id = this.buildId()
+    this.id = this.buildId(data)
     this.options = this.buildOptions(options)
   }
 
   Notification.prototype = {
     buildData: function(data) {
-      return Object.assign({ type: 'basic', }, data)
+      return {
+        type   : 'basic',
+        title  : data.name,
+        iconUrl: data.avatar,
+        message: data.message,
+        contextMessage: data.contextMessage
+      }
     },
 
-    buildId: function() {
+    buildId: function(data) {
       return [
         Notification.PREFIX,
-        this.data.SID,
-        this.data.name,
-        this.data.text
+        data.SID,
+        data.name,
+        data.text
       ].join('-')
     },
 
