@@ -105,6 +105,14 @@
   })
 
 
+  addEventListener('.js-icon-click-example', 'click', function() {
+    var iconUrlInput = document.getElementById('iconClickURL')
+    var href = this.dataset.href
+
+    iconUrlInput.value = href
+  })
+
+
   addEventListener('.js-disable-example', 'click', function() {
     var domainsTextarea = document.getElementById('disabledUrls')
     var currentDomains = disabledUrls.toArray(domainsTextarea.value)

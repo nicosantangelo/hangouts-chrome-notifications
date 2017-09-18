@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+- Open a configurable URL when the extension icon is clicked, defaulting to `hangouts.google.com`
+
 ## 2.0.0
 
 - Add the "Play sound" option

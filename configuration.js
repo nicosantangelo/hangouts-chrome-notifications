@@ -6,6 +6,7 @@
     expirationTime         : null,
     muteAllExcept          : '',
     playSound              : false,
+    iconClickURL           : '',
     disabledUrls           : [],
   }
 

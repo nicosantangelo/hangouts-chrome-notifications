@@ -6,7 +6,7 @@
 
 chrome.extension.onConnect.addListener(function(port) {
   chrome.notifications.onClicked.addListener(function(notificationId) {
-    var tabId = Notification.cache[notificationId]
+    let tabId = Notification.cache[notificationId]
 
     if (tabId) {
       chrome.tabs.update(tabId, {
@@ -19,8 +19,8 @@ chrome.extension.onConnect.addListener(function(port) {
   })
 
   port.onMessage.addListener(function(data, port) {
-    var tab = port.sender.tab
-    var changes = data.changes
+    let tab = port.sender.tab
+    let changes = data.changes
 
     configuration.get(function(config) {
       if (isUrlDisabled(tab.url, config.disabledUrls)) return
@@ -32,7 +32,7 @@ chrome.extension.onConnect.addListener(function(port) {
       data.message = changes.becameOnline ? 'Is now online' : data.text,
       data.contextMessage = 'From ' + getBasename(tab.url)
 
-      var notification = new Notification(data, {
+      let notification = new Notification(data, {
         expirationTime: config.expirationTime,
         playSound: config.playSound
       })
@@ -66,7 +66,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 // -----------------------------------------------------------------------------
 // Extension icon popup clicked
 
-chrome.browserAction.onClicked.addListener(openOptionsPage)
+chrome.browserAction.onClicked.addListener(function() {
+  let defaultURL = 'hangouts.google.com'
+  let validURLs = [defaultURL, 'mail.google.com', 'gmail.com', 'inbox.google.com']
+
+  configuration.get('iconClickURL', function(url) {
+    const basename = validURL(url) ? getBasename(url) : defaultURL
+
+    chrome.tabs.create({ url: 'https://' + basename })
+  })
+
+  function validURL(url) {
+    return url && validURLs.includes(getBasename(url))
+  }
+})
 
 
 // ----------------------------------------------------------
@@ -75,7 +88,7 @@ chrome.browserAction.onClicked.addListener(openOptionsPage)
 chrome.runtime.onInstalled.addListener(function(details) {
   if (details.reason !== 'install' && details.reason !== 'update') return
 
-  var options = {}
+  let options = {}
 
   if(details.reason === 'update') {
     options['justUpdated'] = 1
@@ -98,7 +111,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 function isUrlDisabled(url, disabledUrls) {
   disabledUrls = disabledUrls || []
 
-  for(var i = 0; i < disabledUrls.length; i++) {
+  for(let i = 0; i < disabledUrls.length; i++) {
     if (url.search(disabledUrls[i]) !== -1) return true
   }
 }
