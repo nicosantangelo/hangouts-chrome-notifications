@@ -73,7 +73,13 @@ chrome.browserAction.onClicked.addListener(function() {
   configuration.get('iconClickURL', function(url) {
     const basename = validURL(url) ? getBasename(url) : defaultURL
 
-    chrome.tabs.create({ url: 'https://' + basename })
+    chrome.tabs.query({ url: 'https://' + basename + '/*' }, function(tabs) {
+      if (tabs && tabs.length) {
+        chrome.tabs.update(tabs[0].id, { selected: true, active: true })
+      } else {
+        chrome.tabs.create({ url: 'https://' + basename })
+      }
+    })
   })
 
   function validURL(url) {
