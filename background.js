@@ -1,4 +1,4 @@
-/* Globals: configuration, Notification */
+/* Globals: configuration, Notification, optionalPermissions */
 
 
 // ----------------------------------------------------------
@@ -75,7 +75,19 @@ chrome.browserAction.onClicked.addListener(function() {
   configuration.get('iconClickURL', function(url) {
     const basename = isValidURL(url) ? getBasename(url) : defaultURL
 
-    chrome.tabs.create({ url: 'https://' + basename })
+    optionalPermissions.isGranted('tabs', function(isGranted) {
+      if (isGranted) {
+        chrome.tabs.query({ url: 'https://' + basename + '/*' }, function(tabs) {
+          if (tabs && tabs.length) {
+            chrome.tabs.update(tabs[0].id, { selected: true, active: true })
+          } else {
+            chrome.tabs.create({ url: 'https://' + basename })
+          }
+        })
+      } else {
+        chrome.tabs.create({ url: 'https://' + basename })
+      }
+    })
   })
 
   function isValidURL(url) {

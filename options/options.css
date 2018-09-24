@@ -68,6 +68,18 @@ h4 {
   opacity: 1;
 }
 
+.tab-permissions {
+  display: none;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+.tab-permissions.visible {
+  display: block;
+}
+.tab-permissions.fade-out {
+  opacity: 0;
+}
+
 .options .option-group {
   padding-top: 10px;
   padding-bottom: 10px;

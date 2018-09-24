@@ -25,6 +25,15 @@
             <small>The extension has just been updated. You may need to refresh any existing tab for it to work again. Sorry for the inconvenience!</small>
           </div>
         </div>
+        <div id="js-tab-permissions" class="option-group tab-permissions">
+          <h4>Avoid opening multiple tabs <small class="new">new</small></h4>
+          <div class="option">
+             The extension needs extra permissions to the open tabs to be able to avoid opening multiple tabs with same URL
+             <br /><br />
+             <a id="js-request-tab-permissions" href="#">Grant permission</a>
+          </div>
+        </div>
+
         <div class="option-group">
           <h4>Notify me when</h4>
           <div class="option">
@@ -132,6 +141,7 @@
     </div>
   </div>
 
+  <script src="../optionalPermissions.js"></script>
   <script src="../configuration.js"></script>
   <script src="options.js"></script>
   <script src="analytics.js" async></script>

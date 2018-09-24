@@ -1,4 +1,4 @@
-/* Globals: configuration */
+/* Globals: configuration, optionalPermissions */
 
 ;(function() {
 
@@ -150,6 +150,15 @@
     this.parentElement.classList.add('hidden')
   })
 
+  addEventListener('#js-request-tab-permissions', 'click', function() {
+    optionalPermissions.request('tabs', function(wasAllowed) {
+      if (wasAllowed) {
+        var container = document.getElementById('js-tab-permissions')
+        container.classList.add('fade-out')
+        setTimeout(function() { container.classList.remove('visible') }, 700)
+      }
+    })
+  })
 
   // -----------------------------------------------------------------------------
   // Start
@@ -173,6 +182,16 @@
   setTimeout(function() {
     document.querySelector('.configuration').classList.add('visible')
   }, 5)
+
+  optionalPermissions.isGranted('tabs', function(isGranted) {
+    var container = document.getElementById('js-tab-permissions')
+
+    if (isGranted) {
+      container.classList.add('hidden')
+    } else {
+      container.classList.add('visible')
+    }
+  })
 
   // -----------------------------------------------------------------------------
   // Utils

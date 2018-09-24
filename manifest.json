@@ -37,10 +37,11 @@
     }
   ],
   "background": {
-    "scripts": ["configuration.js", "Notification.js", "background.js"],
+    "scripts": ["configuration.js", "Notification.js", "optionalPermissions.js", "background.js"],
     "persistent": false
   },
   "options_page": "options/options.html",
   "permissions": ["storage", "notifications"],
+  "optional_permissions": ["tabs"],
   "content_security_policy": "default-src 'self'; script-src 'self' 'unsafe-eval' https://www.google-analytics.com; img-src 'self' https://www.google-analytics.com https://stats.g.doubleclick.net data:"
 }
