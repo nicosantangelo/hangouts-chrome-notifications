@@ -103,6 +103,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
   if (details.reason !== 'install' && details.reason !== 'update') return
 
   let options = {}
+  let callback = function() {}
 
   Notification.clearAll()
 
@@ -121,9 +122,10 @@ chrome.runtime.onInstalled.addListener(function(details) {
   if(details.reason === 'install') {
     options['firstInstall'] = true
     options['justUpdated'] = 0
-
-    chrome.storage.local.set(options, openOptionsPage)
+    callback = openOptionsPage
   }
+
+  chrome.storage.local.set(options, callback)
 })
 
 
