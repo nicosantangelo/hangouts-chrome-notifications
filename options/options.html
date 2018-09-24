@@ -55,17 +55,8 @@
         </div>
 
         <div class="option-group">
-          <h4>Mute notifications when</h4>
-          <div class="option">
-            <input type="checkbox" name="fireOnInactiveTab" id="fireOnInactiveTab">
-            <span>The hangouts tab is active</span>  <span class="as-link" data-balloon="If left unchecked the notification will appear even if you're looking at the page that has the Hangouts chat" data-balloon-length="large">?</span>
-          </div>
-        </div>
-
-        <div class="option-group">
           <div class="option">
             <h4>Notifications expiration time</h4>
-
             <div class="expiration-time">
               <input type="text" id="expirationTime" class="input" placeholder="Ex: 5">
               <br />
@@ -75,10 +66,18 @@
         </div>
 
         <div class="option-group">
+          <h4>Only receive notifications with <small class="new hidden">new</small></h4>
+          <div class="option">
+            <input type="text" id="messageKeywords" class="input" placeholder="Ex: Work, Mom">
+            <small>Will check the text for the provided keywords, separated by commas <span class="as-link" data-balloon="Use it if you only want to get notifications with certain keywords" data-balloon-length="large">?</span></small>
+          </div>
+        </div>
+
+        <div class="option-group">
           <h4>Mute all notifications except for</h4>
           <div class="option">
             <input type="text" id="muteAllExcept" class="input" placeholder="Ex: Jack Black, Johana White">
-            <small>Names as they appear in Hangouts, separated commas <span class="as-link" data-balloon="Use it if you only want to get notifications from certain users" data-balloon-length="large">?</span></small>
+            <small>Names as they appear in Hangouts, separated by commas <span class="as-link" data-balloon="Use it if you only want to get notifications from certain users" data-balloon-length="large">?</span></small>
           </div>
         </div>
 
@@ -95,6 +94,14 @@
         </div>
 
         <div class="advanced-options hidden">
+          <div class="option-group">
+            <h4>Mute notifications when</h4>
+            <div class="option">
+              <input type="checkbox" name="fireOnInactiveTab" id="fireOnInactiveTab">
+              <span>The hangouts tab is active</span>  <span class="as-link" data-balloon="If left unchecked the notification will appear even if you're looking at the page that has the Hangouts chat" data-balloon-length="large">?</span>
+            </div>
+          </div>
+
           <div class="option-group no-border">
             <h4>Mute on</h4>
             <div class="option">

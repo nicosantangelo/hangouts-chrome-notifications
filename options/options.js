@@ -42,10 +42,10 @@
       configuration.forEachCurrent(function(key, value) {
         var element = options.htmlElements[key]
 
-        if(element.type === 'checkbox') {
+        if (element.type === 'checkbox') {
           element.checked = value
         } else {
-          if(key === 'disabledUrls') {
+          if (key === 'disabledUrls') {
             element.value = disabledUrls.fromArray(value)
           } else {
             element.value = value
@@ -61,15 +61,15 @@
         var element = options.htmlElements[key]
         if (! element) return
 
-        if(element.type === 'checkbox') {
+        if (element.type === 'checkbox') {
           newValues[key] = element.checked
         } else {
-          if(key === 'disabledUrls') {
+          if (key === 'disabledUrls') {
             newValues[key] = disabledUrls.toArray(element.value)
-          } else if(key === 'expirationTime') {
+          } else if (key === 'expirationTime') {
             newValues[key] = expirationTime.parseValue(element.value)
           } else {
-            newValues[key] = element.value
+            newValues[key] = element.value.trim()
           }
         }
       })

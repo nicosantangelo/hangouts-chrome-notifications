@@ -26,7 +26,8 @@ chrome.extension.onConnect.addListener(function(port) {
       if (isUrlDisabled(tab.url, config.disabledUrls)) return
       if (changes.becameOnline && ! config.showOnlineNotifications) return
       if (changes.becameUnread && ! config.showUnreadNotifications) return
-      if (config.muteAllExcept && config.muteAllExcept.indexOf(data.name) === -1) return
+      if (config.muteAllExcept && ! containsAnyName(data.name, config.muteAllExcept)) return
+      if (! changes.becameOnline && config.messageKeywords && ! containsAnyKeywords(data.text, config.messageKeywords)) return
       if (data.tabActive && config.fireOnInactiveTab) return
 
       let notificationData = {
@@ -153,4 +154,22 @@ function getBasename(url) {
 function openOptionsPage() {
   let optionsURL = chrome.extension.getURL('options/options.html')
   chrome.tabs.create({ url: optionsURL })
+}
+
+function containsAnyName(fullName, names) {
+  return splitText(names).some(function(name) {
+    return containsAnyKeywords(name, fullName)
+  })
+}
+
+function containsAnyKeywords(text, keywords) {
+  if (! keywords) return false
+
+  return splitText(keywords).some(function(keyword) {
+    return text.search(keyword) !== -1
+  })
+}
+
+function splitText(text) {
+  return text.split(/,\s*/)
 }

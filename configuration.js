@@ -4,6 +4,7 @@
     showUnreadNotifications: true,
     fireOnInactiveTab      : true,
     expirationTime         : null,
+    messageKeywords        : '',
     muteAllExcept          : '',
     playSound              : false,
     iconClickURL           : '',
