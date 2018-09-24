@@ -29,15 +29,17 @@ chrome.extension.onConnect.addListener(function(port) {
       if (config.muteAllExcept && config.muteAllExcept.indexOf(data.name) === -1) return
       if (data.tabActive && config.fireOnInactiveTab) return
 
-      data.message = changes.becameOnline ? 'Is now online' : data.text,
-      data.contextMessage = 'From ' + getBasename(tab.url)
+      let notificationData = {
+        title: data.name,
+        iconUrl: data.avatar,
+        message: changes.becameOnline ? 'Is now online' : data.text,
+        contextMessage: 'From ' + getBasename(tab.url)
+      }
 
-      let notification = new Notification(data, {
+      new Notification(notificationData, {
         expirationTime: config.expirationTime,
         playSound: config.playSound
-      })
-
-      notification.send(tab.id)
+      }).send(tab.id)
     })
   })
 })
@@ -71,12 +73,12 @@ chrome.browserAction.onClicked.addListener(function() {
   let validURLs = [defaultURL, 'mail.google.com', 'gmail.com', 'inbox.google.com']
 
   configuration.get('iconClickURL', function(url) {
-    const basename = validURL(url) ? getBasename(url) : defaultURL
+    const basename = isValidURL(url) ? getBasename(url) : defaultURL
 
     chrome.tabs.create({ url: 'https://' + basename })
   })
 
-  function validURL(url) {
+  function isValidURL(url) {
     return url && validURLs.includes(getBasename(url))
   }
 })
@@ -90,28 +92,42 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
   let options = {}
 
+  Notification.clearAll()
+
   if(details.reason === 'update') {
+    getCurrentTab(function(tab) {
+      new Notification({
+        title  : 'Hangouts Notifications updated',
+        iconUrl: chrome.extension.getURL('icons/128.png'),
+        message: 'You might need to refresh Hangouts tabs for this extension to work'
+      }).send(tab.id)
+    })
+
     options['justUpdated'] = 1
   }
 
   if(details.reason === 'install') {
     options['firstInstall'] = true
     options['justUpdated'] = 0
+
+    chrome.storage.local.set(options, openOptionsPage)
   }
-
-  chrome.storage.local.set(options, openOptionsPage)
-
-  Notification.clearAll()
 })
 
 
 // ----------------------------------------------------------
 // Utils
 
+function getCurrentTab(callback) {
+  chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+    callback(tabs[0])
+  })
+}
+
 function isUrlDisabled(url, disabledUrls) {
   disabledUrls = disabledUrls || []
 
-  for(let i = 0; i < disabledUrls.length; i++) {
+  for (let i = 0; i < disabledUrls.length; i++) {
     if (url.search(disabledUrls[i]) !== -1) return true
   }
 }

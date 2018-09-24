@@ -14,7 +14,7 @@
     DEFAULT: DEFAULT_CONFIGURATION,
 
     forEachDefault: function(callback) {
-      for(var prop in DEFAULT_CONFIGURATION) {
+      for (var prop in DEFAULT_CONFIGURATION) {
         callback(prop, DEFAULT_CONFIGURATION[prop])
       }
     },
@@ -42,7 +42,7 @@
 
     forEachCurrent: function(callback) {
       configuration.get(function (config) {
-        for(var prop in config) {
+        for (var prop in config) {
           callback(prop, config[prop])
         }
       })

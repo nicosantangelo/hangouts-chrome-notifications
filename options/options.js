@@ -22,7 +22,7 @@
       if (domains) {
         domains = domains.split('\n')
 
-        for(var i = 0; i < domains.length; i++) {
+        for (var i = 0; i < domains.length; i++) {
           if (! isEmptyString(domains[i]) && array.indexOf(domains[i]) === -1) array.push(domains[i])
         }
       }
@@ -158,7 +158,7 @@
     if (items.justUpdated > 0) {
       var newItems = document.getElementsByClassName('new')
 
-      for(var i = 0; i < newItems.length; i++) {
+      for (var i = 0; i < newItems.length; i++) {
         newItems[i].classList.remove('hidden')
       }
 

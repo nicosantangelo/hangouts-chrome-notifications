@@ -1,19 +1,16 @@
 (function() {
   function Notification(data, options) {
+    this.options = this.buildOptions(options)
     this.data = this.buildData(data)
     this.id = this.buildId(data)
-    this.options = this.buildOptions(options)
   }
 
   Notification.prototype = {
     buildData: function(data) {
-      return {
-        type   : 'basic',
-        title  : data.name,
-        iconUrl: data.avatar,
-        message: data.message,
-        contextMessage: data.contextMessage
-      }
+      return Object.assign({
+        type: 'basic',
+        requireInteraction: this.shouldRequireInteraction()
+      }, data)
     },
 
     buildId: function(data) {
@@ -33,11 +30,15 @@
 
       if (! options) return settings
 
-      for (key in settings) {
+      for (var key in settings) {
         if (options[key] != null) settings[key] = options[key]
       }
 
       return settings
+    },
+
+    shouldRequireInteraction: function() {
+      return this.options.expirationTime > 10
     },
 
     send: function(tabId) {

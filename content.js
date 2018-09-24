@@ -185,7 +185,7 @@
       if (this.isMultiple()) {
         var author = this.getActiveName()
 
-        for(var i = 0, avatars = this.findAll('avatar'); i < avatars.length; i++) {
+        for (var i = 0, avatars = this.findAll('avatar'); i < avatars.length; i++) {
           if (avatars[i].alt.search(author) !== -1) {
             avatar = avatars[i].src
             break
