@@ -50,7 +50,7 @@ chrome.extension.onConnect.addListener(function(port) {
 // onMessage listener
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  switch(request.type) {
+  switch (request.type) {
     case 'icon':
       let status = request.active ? '' : 'inactive_'
 
@@ -108,7 +108,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
   Notification.clearAll()
 
-  if(details.reason === 'update') {
+  if (details.reason === 'update') {
     getCurrentTab(function(tab) {
       new Notification({
         title  : 'Hangouts Notifications updated',
@@ -120,7 +120,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
     options['justUpdated'] = 1
   }
 
-  if(details.reason === 'install') {
+  if (details.reason === 'install') {
     options['firstInstall'] = true
     options['justUpdated'] = 0
     callback = openOptionsPage
@@ -165,8 +165,10 @@ function containsAnyName(fullName, names) {
 function containsAnyKeywords(text, keywords) {
   if (! keywords) return false
 
+  text = text.toLowerCase()
+
   return splitText(keywords).some(function(keyword) {
-    return text.search(keyword) !== -1
+    return text.search(keyword.toLowerCase()) !== -1
   })
 }
 
