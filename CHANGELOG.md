@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+
+- Keywords support
+- Optional permissions to avoid re-opening tabs
+- Support long notification times and update notification
+
 ## 2.0.1
 
 - Open a configurable URL when the extension icon is clicked, defaulting to `hangouts.google.com`
