@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.0
+
+- Support long notification times on Windows 10 by adding a Close button
+
 ## 3.0.0
 
 - Keywords support

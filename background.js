@@ -10,8 +10,9 @@ chrome.extension.onConnect.addListener(function(port) {
 
     if (tabId) {
       chrome.tabs.update(tabId, {
-        selected   : true,
-        active     : true
+        highlighted: true,
+        selected: true,
+        active: true
       }, function(tab) {
         chrome.windows.update(tab.windowId, { focused: true }, function() { Notification.clear(notificationId) })
       })

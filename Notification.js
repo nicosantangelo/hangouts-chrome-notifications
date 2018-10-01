@@ -1,4 +1,6 @@
 (function() {
+  var OS = null
+
   function Notification(data, options) {
     this.options = this.buildOptions(options)
     this.data = this.buildData(data)
@@ -7,9 +9,16 @@
 
   Notification.prototype = {
     buildData: function(data) {
+      var buttons
+
+      if (OS === 'win') {
+        buttons = [{ title: 'Close', iconUrl: '' }]
+      }
+
       return Object.assign({
         type: 'basic',
-        requireInteraction: this.shouldRequireInteraction()
+        requireInteraction: this.shouldRequireInteraction(),
+        buttons: buttons
       }, data)
     },
 
@@ -65,6 +74,8 @@
 
   Notification.PREFIX = '[HangoutsNotifications]'
 
+  Notification.IS_WINDOWS = false // set later
+
   Notification.cache = {
     // notificationId: tabId
   }
@@ -83,6 +94,14 @@
       }
     })
   }
+
+  chrome.notifications.onButtonClicked.addListener(function(id) {
+    Notification.clear(id)
+  })
+
+  chrome.runtime.getPlatformInfo(function(info) {
+    OS = info.os
+  })
 
   window.Notification = Notification
 })()
