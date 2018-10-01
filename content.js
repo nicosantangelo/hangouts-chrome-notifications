@@ -220,12 +220,16 @@
   var notifications = {
     post: function(notification) {
       getDataUri(notification.avatar, function(dataUri) {
-        notification.tabActive = ! document.hidden
+        notification.tabActive = document.visibilityState !== 'hidden'
         notification.avatar = dataUri
         notification.SID = SID
 
-        var port = chrome.extension.connect({ name: 'Hangouts' })
-        port.postMessage(notification)
+        try {
+          var port = chrome.extension.connect({ name: 'Hangouts' })
+          port.postMessage(notification)
+        } catch(error) {
+          // Extension updated
+        }
       })
     }
   }
