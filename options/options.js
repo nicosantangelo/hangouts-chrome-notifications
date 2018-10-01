@@ -8,10 +8,7 @@
   var expirationTime = {
     parseValue: function(value) {
       value = parseInt(value, 10)
-
-      if (value && value > 0) {
-        return value
-      }
+      return value && value > 0 ? value : null
     }
   }
 
