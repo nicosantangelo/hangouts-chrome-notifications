@@ -20,6 +20,26 @@
     text  : '.ng.sQR2Rb'
   }
 
+
+  // ==
+
+  function Port() {
+    this.port = chrome.extension.connect({ name: 'Hangouts Notifications' })
+  }
+
+  Port.prototype = {
+    postMessage(type, data) {
+      try {
+        this.port.postMessage({ type: type, data: data })
+      } catch(error) {
+        // Extension updated
+      }
+    }
+  }
+
+
+  // ==
+
   function Retrier(method, cap, delay) {
     var timeoutId = null
     var times = 0
@@ -224,18 +244,15 @@
         notification.avatar = dataUri
         notification.SID = SID
 
-        try {
-          var port = chrome.extension.connect({ name: 'Hangouts' })
-          port.postMessage(notification)
-        } catch(error) {
-          // Extension updated
-        }
+        port.postMessage('notification', notification)
       })
     }
   }
 
   // ----------------------------------------------------------
   // Utils
+
+  var port = new Port()
 
   var SID = (function getSID() {
     var match = document.cookie.match(/SID=([^\;]+)/)
@@ -270,6 +287,6 @@
       changes.forEach(notifications.post)
     })
 
-    chrome.runtime.sendMessage({ type: 'icon', active: true })
+    port.postMessage('icon', { active: true })
   })
 })()

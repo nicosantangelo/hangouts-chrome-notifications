@@ -4,65 +4,68 @@
 // ----------------------------------------------------------
 // Messages from the front-end
 
-chrome.extension.onConnect.addListener(function(port) {
-  chrome.notifications.onClicked.addListener(function(notificationId) {
-    let tabId = Notification.cache[notificationId]
-
-    if (tabId) {
-      chrome.tabs.update(tabId, {
-        highlighted: true,
-        selected: true,
-        active: true
-      }, function(tab) {
-        chrome.windows.update(tab.windowId, { focused: true }, function() { Notification.clear(notificationId) })
-      })
-    }
-  })
-
-  port.onMessage.addListener(function(data, port) {
+chrome.runtime.onConnect.addListener(function(port) {
+  port.onMessage.addListener(function(message, port) {
     let tab = port.sender.tab
-    let changes = data.changes
+    let data = message.data
 
-    configuration.get(function(config) {
-      if (isUrlDisabled(tab.url, config.disabledUrls)) return
-      if (changes.becameOnline && ! config.showOnlineNotifications) return
-      if (changes.becameUnread && ! config.showUnreadNotifications) return
-      if (config.muteAllExcept && ! containsAnyName(data.name, config.muteAllExcept)) return
-      if (! changes.becameOnline && config.messageKeywords && ! containsAnyKeywords(data.text, config.messageKeywords)) return
-      if (data.tabActive && config.fireOnInactiveTab) return
+    switch (message.type) {
+      case 'icon': {
+        let status = data.active ? '' : 'inactive_'
 
-      let notificationData = {
-        title: data.name,
-        iconUrl: data.avatar,
-        message: changes.becameOnline ? 'Is now online' : data.text,
-        contextMessage: 'From ' + getBasename(tab.url)
+        chrome.browserAction.setIcon({
+          path: {
+            19: 'icons/' + status + '19.png',
+            38: 'icons/' + status + '38.png'
+          },
+          tabId: tab.id
+        })
+        break
       }
+      case 'notification': {
+        let changes = data.changes
 
-      new Notification(notificationData, {
-        expirationTime: config.expirationTime,
-        playSound: config.playSound
-      }).send(tab.id)
-    })
+        configuration.get(function(config) {
+          if (isUrlDisabled(tab.url, config.disabledUrls)) return
+          if (changes.becameOnline && !config.showOnlineNotifications) return
+          if (changes.becameUnread && !config.showUnreadNotifications) return
+          if (config.muteAllExcept && !containsAnyName(data.name, config.muteAllExcept)) return
+          if (!changes.becameOnline && config.messageKeywords && !containsAnyKeywords(data.text, config.messageKeywords)) return
+          if (data.tabActive && config.fireOnInactiveTab) return
+
+          let notificationData = {
+            title: data.name,
+            iconUrl: data.avatar,
+            message: changes.becameOnline ? 'Is now online' : data.text,
+            contextMessage: 'From ' + getBasename(tab.url)
+          }
+
+          new Notification(notificationData, {
+            expirationTime: config.expirationTime,
+            playSound: config.playSound
+          }).send(tab.id)
+        })
+        break
+      }
+    }
   })
 })
 
 
 // ----------------------------------------------------------
-// onMessage listener
+// notifications onClick (dismiss)
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  switch (request.type) {
-    case 'icon':
-      let status = request.active ? '' : 'inactive_'
+chrome.notifications.onClicked.addListener(function(notificationId) {
+  let tabId = Notification.cache[notificationId]
 
-      chrome.browserAction.setIcon({
-        path: {
-          19: 'icons/' + status + '19.png',
-          38: 'icons/' + status + '38.png'
-        },
-        tabId: sender.tab.id
-      })
-      break
+  if (tabId) {
+    chrome.tabs.update(tabId, {
+      highlighted: true,
+      selected: true,
+      active: true
+    }, function(tab) {
+      chrome.windows.update(tab.windowId, { focused: true }, function() { Notification.clear(notificationId) })
+    })
   }
 })
 
