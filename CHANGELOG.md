@@ -3,6 +3,7 @@
 ## 3.1.0
 
 - Support long notification times on Windows 10 by adding a Close button
+- Reliably recognize when the tab is active
 
 ## 3.0.0
 
