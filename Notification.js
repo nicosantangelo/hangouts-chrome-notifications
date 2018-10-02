@@ -9,15 +9,16 @@
 
   Notification.prototype = {
     buildData: function(data) {
+      var requireInteraction = this.shouldRequireInteraction()
       var buttons
 
-      if (OS === 'win') {
+      if (OS === 'win' && requireInteraction) {
         buttons = [{ title: 'Close', iconUrl: '' }]
       }
 
       return Object.assign({
         type: 'basic',
-        requireInteraction: this.shouldRequireInteraction(),
+        requireInteraction: requireInteraction,
         buttons: buttons
       }, data)
     },
