@@ -27,8 +27,8 @@
       return [
         Notification.PREFIX,
         data.SID,
-        data.name,
-        data.text
+        data.title,
+        data.message
       ].join('-')
     },
 
